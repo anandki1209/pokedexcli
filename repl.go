@@ -10,10 +10,14 @@ import (
 type cliCommand struct {
 	name        string
 	description string
-	callback    func() error
+	callback    func(*config) error
 }
 
-func startRepl() {
+type config struct {
+	supportedCommands map[string]cliCommand
+}
+
+func startRepl(cfg *config) {
 
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
@@ -28,14 +32,14 @@ func startRepl() {
 		if len(cleanText) == 0 { // guarding against index out or error
 			continue
 		}
-		supportedCommands := getCommands()
+		supportedCommands := cfg.supportedCommands
 		command, ok := supportedCommands[cleanText[0]]
 
 		if !ok {
 			fmt.Println("Unknown command")
 			continue
 		}
-		err := command.callback()
+		err := command.callback(cfg)
 		if err != nil {
 			fmt.Print(err)
 		}
@@ -70,6 +74,5 @@ func getCommands() map[string]cliCommand {
 			callback:    commandHelp,
 		},
 	}
-
 	return supportedCommands
 }
