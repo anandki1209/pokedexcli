@@ -20,7 +20,11 @@ func commandMap(cfg *config) error {
 	}
 
 	cfg.Next = resp.Next
-	cfg.Previous = resp.Previous
+	if resp.Previous == nil {
+		cfg.Previous = ""
+	} else {
+		cfg.Previous = *resp.Previous
+	}
 
 	return nil
 }

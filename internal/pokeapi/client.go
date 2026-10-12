@@ -8,7 +8,7 @@ import (
 type PokeResponse struct {
 	Count    int       `json:"count"`
 	Next     string    `json:"next"`
-	Previous any       `json:"previous"`
+	Previous *string   `json:"previous"`
 	Results  []Results `json:"results"`
 }
 type Results struct {
