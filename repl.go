@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/anandki1209/pokedexcli/internal/pokeapi"
 )
 
 type cliCommand struct {
@@ -14,9 +16,10 @@ type cliCommand struct {
 }
 
 type config struct {
+	pokeapiClient     pokeapi.Client
 	supportedCommands map[string]cliCommand
-	Next              string
-	Previous          string
+	Next              *string
+	Previous          *string
 }
 
 func startRepl(cfg *config) {
@@ -78,7 +81,7 @@ func getCommands() map[string]cliCommand {
 		"map": {
 			name:        "map",
 			description: "Displays the names of 20 location areas in the Pokemon world",
-			callback:    commandMap,
+			callback:    commandMapf,
 		},
 		"mapb": {
 			name:        "mapb",

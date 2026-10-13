@@ -1,34 +1,18 @@
 package pokeapi
 
 import (
-	"encoding/json"
 	"net/http"
+	"time"
 )
 
-type PokeResponse struct {
-	Count    int       `json:"count"`
-	Next     string    `json:"next"`
-	Previous *string   `json:"previous"`
-	Results  []Results `json:"results"`
-}
-type Results struct {
-	Name string `json:"name"`
-	URL  string `json:"url"`
+type Client struct {
+	httpClient http.Client
 }
 
-func GetLocationAreas(url string) (PokeResponse, error) {
-	res, err := http.Get(url)
-	if err != nil {
-		return PokeResponse{}, err
+func NewClient(timeout time.Duration) Client {
+	return Client{
+		httpClient: http.Client{
+			Timeout: timeout,
+		},
 	}
-	defer res.Body.Close()
-	var responseResult PokeResponse
-
-	decoder := json.NewDecoder(res.Body)
-	if err := decoder.Decode(&responseResult); err != nil {
-		return PokeResponse{}, err
-	}
-
-	return responseResult, nil
-
 }

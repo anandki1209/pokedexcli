@@ -1,16 +1,13 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-
-	"github.com/anandki1209/pokedexcli/internal/pokeapi"
 )
 
-func commandMap(cfg *config) error {
-	if cfg.Next == "" {
-		cfg.Next = "https://pokeapi.co/api/v2/location-area/?offset=0&limit=20"
-	}
-	resp, err := pokeapi.GetLocationAreas(cfg.Next)
+func commandMapf(cfg *config) error {
+
+	resp, err := cfg.pokeapiClient.ListLocations(cfg.Next)
 	if err != nil {
 		return err
 	}
@@ -20,11 +17,26 @@ func commandMap(cfg *config) error {
 	}
 
 	cfg.Next = resp.Next
-	if resp.Previous == nil {
-		cfg.Previous = ""
-	} else {
-		cfg.Previous = *resp.Previous
-	}
+	cfg.Previous = resp.Previous
 
 	return nil
+}
+
+func commandMapb(cfg *config) error {
+	if cfg.Previous == nil {
+		return errors.New("you're on the first page")
+	}
+	resp, err := cfg.pokeapiClient.ListLocations(cfg.Previous)
+	if err != nil {
+		return err
+	}
+
+	for _, r := range resp.Results {
+		fmt.Println(r.Name)
+	}
+	cfg.Next = resp.Next
+	cfg.Previous = resp.Previous
+
+	return nil
+
 }
