@@ -55,15 +55,20 @@ func (c *Cache) reapLoop() {
 	ticker := time.NewTicker(c.interval)
 	defer ticker.Stop()
 
-	for t := range ticker.C {
-		c.mu.Lock()
-		for k, ch := range c.cacheMap {
-			timediff := t.Sub(ch.createdAt)
-			if timediff >= c.interval {
-				delete(c.cacheMap, k)
-			}
-		}
-		c.mu.Unlock()
+	for range ticker.C {
+		c.reap(time.Now().UTC(), c.interval)
 
+	}
+}
+
+// reap takes time and interval an d delete all expired entries in map
+func (c *Cache) reap(now time.Time, interval time.Duration) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	for k, ch := range c.cacheMap {
+
+		if ch.createdAt.Before(now.Add(-interval)) {
+			delete(c.cacheMap, k)
+		}
 	}
 }
