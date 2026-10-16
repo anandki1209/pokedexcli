@@ -7,8 +7,8 @@ import (
 )
 
 func commandCatch(c *config, args ...string) error {
-	if len(args) < 1 {
-		return errors.New("you must provide a  pokemon name")
+	if len(args) != 1 {
+		return errors.New("you must provide a  pokemon name\n")
 	}
 
 	pokemonName := args[0]

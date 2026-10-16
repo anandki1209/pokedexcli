@@ -1,12 +1,13 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 )
 
 func commandExplore(cfg *config, args ...string) error {
 	if len(args) != 1 {
-		return fmt.Errorf("No location provided\n")
+		return errors.New("No location provided\n")
 	}
 
 	name := args[0]

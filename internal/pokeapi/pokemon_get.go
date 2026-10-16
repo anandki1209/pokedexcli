@@ -30,7 +30,7 @@ func (c *Client) GetPokemon(name string) (Pokemon, error) {
 	}
 
 	if res.StatusCode == http.StatusNotFound {
-		return Pokemon{}, errors.New("No pokemon exists with this name")
+		return Pokemon{}, errors.New("No pokemon exists with this name\n")
 	}
 
 	defer res.Body.Close()
