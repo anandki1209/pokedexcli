@@ -16,11 +16,10 @@ type cliCommand struct {
 }
 
 type config struct {
-	pokeapiClient     pokeapi.Client
-	supportedCommands map[string]cliCommand
-	UserPokedex       map[string]pokeapi.Pokemon
-	Next              *string
-	Previous          *string
+	pokeapiClient pokeapi.Client
+	UserPokedex   map[string]pokeapi.Pokemon
+	Next          *string
+	Previous      *string
 }
 
 func startRepl(cfg *config) {
@@ -38,7 +37,7 @@ func startRepl(cfg *config) {
 		if len(cleanText) == 0 { // guarding against index out or error
 			continue
 		}
-		supportedCommands := cfg.supportedCommands
+		supportedCommands := getCommands()
 		command, ok := supportedCommands[cleanText[0]]
 
 		if !ok {
@@ -103,6 +102,11 @@ func getCommands() map[string]cliCommand {
 			name:        "inspect <pokemon_name>",
 			description: "inspect a pokemon if it is already caught",
 			callback:    commandInspect,
+		},
+		"pokedex": {
+			name:        "pokedex",
+			description: "prints a list of all the names of the Pokemon the user has caught",
+			callback:    commandPokedex,
 		},
 	}
 	return supportedCommands
