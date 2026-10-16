@@ -18,6 +18,7 @@ type cliCommand struct {
 type config struct {
 	pokeapiClient     pokeapi.Client
 	supportedCommands map[string]cliCommand
+	UserPokedex       map[string]pokeapi.Pokemon
 	Next              *string
 	Previous          *string
 }
@@ -92,6 +93,11 @@ func getCommands() map[string]cliCommand {
 			name:        "explore",
 			description: "explore the pokemon for a given location",
 			callback:    commandExplore,
+		},
+		"catch": {
+			name:        "catch",
+			description: "tries to catch the pokemon",
+			callback:    commandCatch,
 		},
 	}
 	return supportedCommands
